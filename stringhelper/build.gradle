@@ -22,4 +22,186 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:23.3.0'
+    compile 'com.squareup.phrase:phrase:1.1.0'
 }
+
+
+
+//USED FOR JCENTRAL
+//Code below is used to deploy library (sdk) to jcentral repository
+//use ./gradlew bintrayUpload in terminal to publish it to maven central
+//to use dependency use: compile 'com.github.kkontus.stringhelper:stringhelper:1.0.0'
+
+
+apply plugin: 'com.github.dcendents.android-maven'
+apply plugin: 'com.jfrog.bintray'
+
+
+def siteUrl = 'https://github.com/kkontus/StringHelper'      // Homepage URL of the library
+def gitUrl = 'https://github.com/kkontus/StringHelper.git'   // Git repository URL
+group = "com.github.kkontus.stringhelper"                    // Maven Group ID for the artifact
+// This is the library version used when deploying the artifact
+version = "1.0.4"
+
+
+Properties properties = new Properties()
+//properties.load(project.rootProject.file('local.properties').newDataInputStream())
+properties.load(project.rootProject.file('gradle.properties').newDataInputStream())
+
+bintray {
+    user = properties.getProperty("bintray.user")
+    key = properties.getProperty("bintray.apikey")
+
+    configurations = ['archives']
+    pkg {
+        repo = "stringhelper"
+        name = "stringhelper"
+        websiteUrl = ""
+        vcsUrl = gitUrl
+        licenses = ["Apache-2.0"]
+        publish = true
+    }
+}
+
+
+
+install {
+    repositories.mavenInstaller {
+        // This generates POM.xml with proper parameters
+        pom {
+            project {
+                name 'String Helper'
+                packaging 'aar'
+                // optionally artifactId can be defined here
+                description 'String Helper Library'
+                name 'String Helper'
+                url siteUrl
+
+                // Set your license
+                licenses {
+                    license {
+                        name 'The Apache Software License, Version 2.0'
+                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+                developers {
+                    developer {
+                        id 'kkontus'
+                        name 'Kristijan Kontus'
+                        email 'kristijan.kontus@gmail.com'
+                    }
+                }
+                scm {
+                    connection gitUrl
+                    developerConnection gitUrl
+                    url siteUrl
+
+                }
+            }
+        }
+    }
+}
+
+task sourcesJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+    classifier = 'sources'
+}
+
+task javadoc(type: Javadoc) {
+    source = android.sourceSets.main.java.srcDirs
+    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+artifacts {
+    archives javadocJar
+    archives sourcesJar
+}
+
+
+/*
+//USED FOR MAVEN CENTRAL
+//Code below is used to deploy library (sdk) to maven central repository
+//use ./gradlew uploadArchives in terminal to publish it to maven central
+//to use dependency use: compile 'com.github.kkontus.stringhelper:stringhelper:1.0.0'
+
+apply plugin: 'maven'
+apply plugin: 'signing'
+
+task sourcesJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+    classifier = 'sources'
+}
+
+task javadoc(type: Javadoc) {
+    source = android.sourceSets.main.java.srcDirs
+    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+artifacts {
+    archives javadocJar
+    archives sourcesJar
+}
+
+signing {
+    sign configurations.archives
+}
+
+group = "com.github.kkontus.stringhelper"
+version = "1.0.4-SNAPSHOT"
+//version = "1.0.4"
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+            repository(url: stagingRepositoryUrl) {
+                authentication(userName: ossrhUsername, password: ossrhPassword)
+            }
+
+            snapshotRepository(url: snapshotRepositoryUrl) {
+                authentication(userName: ossrhUsername, password: ossrhPassword)
+            }
+
+            pom.project {
+                name 'String Helper'
+                packaging 'aar'
+                // optionally artifactId can be defined here
+                description 'String Helper Library'
+                url 'https://github.com/kkontus/StringHelper.git'
+
+                scm {
+                    url 'scm:git@github.com:kkontus/StringHelper.git'
+                    connection 'scm:git@github.com:kkontus/StringHelper.git'
+                    developerConnection 'scm:git@github.com:kkontus/StringHelper.git'
+                }
+
+                licenses {
+                    license {
+                        name 'The Apache Software License, Version 2.0'
+                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                        distribution 'repo'
+                    }
+                }
+
+                developers {
+                    developer {
+                        id 'kkontus'
+                        name 'Kristijan Kontus'
+                        email 'kristijan.kontus@gmail.com'
+                    }
+                }
+            }
+        }
+    }
+}
+*/
