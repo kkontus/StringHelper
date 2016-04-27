@@ -1,69 +1,22 @@
-apply plugin: 'com.android.library'
-
-android {
-    compileSdkVersion 23
-    buildToolsVersion "23.0.3"
-
-    defaultConfig {
-        minSdkVersion 16
-        targetSdkVersion 23
-        versionCode 1
-        versionName "1.0"
-    }
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
-    }
-}
-
-dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    testCompile 'junit:junit:4.12'
-    compile 'com.android.support:appcompat-v7:23.3.0'
-    compile 'com.squareup.phrase:phrase:1.1.0'
-}
-
-
-
-group = "com.github.kkontus.stringhelper"                // Maven Group ID for the artifact
-archivesBaseName = "stringhelper"
-//version = "1.0.6-SNAPSHOT"
-version = "1.0.6"
-
-ext {
-    //project info
-    projectName = "String Helper"
-    packagingType = "aar"
-    publishedGroupId = group
-    publishedArtifactId = "some artifact id"
-    projectDescription = "String Helper Library"
-    siteUrl = 'https://github.com/kkontus/StringHelper'      // Homepage URL of the library
-    libraryName = "stringhelper"
-    repoName = "stringhelper"
-
-    //scm info
-    scmConnection = "scm:git:http://github.com/kkontus/StringHelper.git"
-    scmDeveloperConnection = "scm:git:https://github.com/kkontus/StringHelper.git"
-    scmUrl = "https://github.com/kkontus/StringHelper"
-
-    //license info
-    licenseName = "The Apache License, Version 2.0"
-    licenseUrl = "http://www.apache.org/licenses/LICENSE-2.0.txt"
-
-    //developer info
-    devId = "kkontus"
-    devName = "Kristijan Kontus"
-    devEmail = "kristijan.kontus@gmail.com"
-}
-
-apply from: 'central.gradle'
-
-
-/*
-//CODE BELOW IS USED FOR DEPLOYING LIBRARY TO MAVEN CENTRAL AND JCENTRAL
-//CREDENTIALS ARE STORED TO gradle.properties
+/**
+ *
+ * CODE BELOW IS USED FOR DEPLOYING LIBRARY TO MAVEN CENTRAL AND JCENTRAL
+ * CREDENTIALS ARE STORED TO gradle.properties AS FOLLOWS
+ *
+ * # MAVEN
+ * signing.keyId=xxxxxxxx //gpg key
+ * signing.password=xxxxxxxx //gpg pass
+ * signing.secretKeyRingFile=/Users/<your_user>/.gnupg/secring.gpg
+ * ossrhUsername=xxxxxx //sonatype user
+ * ossrhPassword=xxxxxx //sonatype password
+ * stagingRepositoryUrl=https://oss.sonatype.org/service/local/staging/deploy/maven2/
+ * snapshotRepositoryUrl=https://oss.sonatype.org/content/repositories/snapshots/
+ *
+ * # JCENTRAL
+ * bintray.user=xxxxxx //bintray user
+ * bintray.apikey=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx //bintray api key
+ *
+ */
 
 //USED FOR MAVEN CENTRAL
 //Code below is used to deploy library (sdk) to maven central repository
@@ -207,4 +160,3 @@ install {
         }
     }
 }
-*/
