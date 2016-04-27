@@ -25,107 +25,12 @@ dependencies {
     compile 'com.squareup.phrase:phrase:1.1.0'
 }
 
+//CODE BELOW IS USED FOR DEPLOYING LIBRARY TO MAVEN CENTRAL AND JCENTRAL
+//CREDENTIALS ARE STORED TO gradle.properties
 
-
-//USED FOR JCENTRAL
-//Code below is used to deploy library (sdk) to jcentral repository
-//use ./gradlew bintrayUpload in terminal to publish it to maven central
-//to use dependency use: compile 'com.github.kkontus.stringhelper:stringhelper:1.0.0'
-
-
-apply plugin: 'com.github.dcendents.android-maven'
-apply plugin: 'com.jfrog.bintray'
-
-
-def siteUrl = 'https://github.com/kkontus/StringHelper'      // Homepage URL of the library
-def gitUrl = 'https://github.com/kkontus/StringHelper.git'   // Git repository URL
-group = "com.github.kkontus.stringhelper"                    // Maven Group ID for the artifact
-// This is the library version used when deploying the artifact
-version = "1.0.4"
-
-
-Properties properties = new Properties()
-//properties.load(project.rootProject.file('local.properties').newDataInputStream())
-properties.load(project.rootProject.file('gradle.properties').newDataInputStream())
-
-bintray {
-    user = properties.getProperty("bintray.user")
-    key = properties.getProperty("bintray.apikey")
-
-    configurations = ['archives']
-    pkg {
-        repo = "stringhelper"
-        name = "stringhelper"
-        websiteUrl = ""
-        vcsUrl = gitUrl
-        licenses = ["Apache-2.0"]
-        publish = true
-    }
-}
-
-
-
-install {
-    repositories.mavenInstaller {
-        // This generates POM.xml with proper parameters
-        pom {
-            project {
-                name 'String Helper'
-                packaging 'aar'
-                // optionally artifactId can be defined here
-                description 'String Helper Library'
-                name 'String Helper'
-                url siteUrl
-
-                // Set your license
-                licenses {
-                    license {
-                        name 'The Apache Software License, Version 2.0'
-                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-                    }
-                }
-                developers {
-                    developer {
-                        id 'kkontus'
-                        name 'Kristijan Kontus'
-                        email 'kristijan.kontus@gmail.com'
-                    }
-                }
-                scm {
-                    connection gitUrl
-                    developerConnection gitUrl
-                    url siteUrl
-
-                }
-            }
-        }
-    }
-}
-
-task sourcesJar(type: Jar) {
-    from android.sourceSets.main.java.srcDirs
-    classifier = 'sources'
-}
-
-task javadoc(type: Javadoc) {
-    source = android.sourceSets.main.java.srcDirs
-    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
-}
-
-task javadocJar(type: Jar, dependsOn: javadoc) {
-    classifier = 'javadoc'
-    from javadoc.destinationDir
-}
-artifacts {
-    archives javadocJar
-    archives sourcesJar
-}
-
-
-/*
 //USED FOR MAVEN CENTRAL
 //Code below is used to deploy library (sdk) to maven central repository
-//use ./gradlew uploadArchives in terminal to publish it to maven central
+//go to library folder and use ../gradlew uploadArchives in terminal to publish it to maven central
 //to use dependency use: compile 'com.github.kkontus.stringhelper:stringhelper:1.0.0'
 
 apply plugin: 'maven'
@@ -155,9 +60,36 @@ signing {
     sign configurations.archives
 }
 
-group = "com.github.kkontus.stringhelper"
-version = "1.0.4-SNAPSHOT"
-//version = "1.0.4"
+//this properties shouldn't be defined with def keyword since they are standard properties
+group = "com.github.kkontus.stringhelper"                // Maven Group ID for the artifact
+archivesBaseName = "stringhelper"
+//version = "1.0.5-SNAPSHOT"
+version = "1.0.5"
+
+//project info
+def projectName = "String Helper"
+def packagingType = "aar"
+def publishedGroupId = group
+def publishedArtifactId = "some artifact id"
+def projectDescription = "String Helper Library"
+def siteUrl = 'https://github.com/kkontus/StringHelper'      // Homepage URL of the library
+def libraryName = "stringhelper"
+def repoName = "stringhelper"
+
+//scm info
+def scmConnection = "scm:git:http://github.com/kkontus/StringHelper.git"
+def scmDeveloperConnection = "scm:git:https://github.com/kkontus/StringHelper.git"
+def scmUrl = "https://github.com/kkontus/StringHelper"
+
+//license info
+def licenseName = "The Apache License, Version 2.0"
+def licenseUrl = "http://www.apache.org/licenses/LICENSE-2.0.txt"
+
+//developer info
+def devId = "kkontus"
+def devName = "Kristijan Kontus"
+def devEmail = "kristijan.kontus@gmail.com"
+
 
 uploadArchives {
     repositories {
@@ -173,35 +105,99 @@ uploadArchives {
             }
 
             pom.project {
-                name 'String Helper'
-                packaging 'aar'
+                name projectName
+                packaging packagingType
+                groupId publishedGroupId
                 // optionally artifactId can be defined here
-                description 'String Helper Library'
-                url 'https://github.com/kkontus/StringHelper.git'
+                //artifactId publishedArtifactId
+                description projectDescription
+                url siteUrl
 
                 scm {
-                    url 'scm:git@github.com:kkontus/StringHelper.git'
-                    connection 'scm:git@github.com:kkontus/StringHelper.git'
-                    developerConnection 'scm:git@github.com:kkontus/StringHelper.git'
+                    connection scmConnection
+                    developerConnection scmDeveloperConnection
+                    url scmUrl
                 }
 
                 licenses {
                     license {
-                        name 'The Apache Software License, Version 2.0'
-                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-                        distribution 'repo'
+                        name licenseName
+                        url licenseUrl
                     }
                 }
 
                 developers {
                     developer {
-                        id 'kkontus'
-                        name 'Kristijan Kontus'
-                        email 'kristijan.kontus@gmail.com'
+                        id devId
+                        name devName
+                        email devEmail
                     }
                 }
             }
         }
     }
 }
-*/
+
+//USED FOR JCENTRAL
+//Code below is used to deploy library (sdk) to jcentral repository
+//go to library folder and use ../gradlew bintrayUpload in terminal to publish it to jcentral
+//to use dependency use: compile 'com.github.kkontus.stringhelper:stringhelper:1.0.0'
+
+apply plugin: 'com.github.dcendents.android-maven'
+apply plugin: 'com.jfrog.bintray'
+
+
+Properties properties = new Properties()
+//properties.load(project.rootProject.file('local.properties').newDataInputStream())
+properties.load(project.rootProject.file('gradle.properties').newDataInputStream())
+
+bintray {
+    user = properties.getProperty("bintray.user")
+    key = properties.getProperty("bintray.apikey")
+
+    configurations = ['archives']
+    pkg {
+        repo = repoName
+        name = libraryName
+        websiteUrl = siteUrl
+        vcsUrl = scmUrl
+        licenses = ["Apache-2.0"]
+        publish = true
+    }
+}
+
+install {
+    repositories.mavenInstaller {
+        // This generates POM.xml with proper parameters
+        pom.project {
+            name projectName
+            packaging packagingType
+            groupId publishedGroupId
+            // optionally artifactId can be defined here
+            //artifactId publishedArtifactId
+            description projectDescription
+            url siteUrl
+
+            scm {
+                connection scmConnection
+                developerConnection scmDeveloperConnection
+                url scmUrl
+            }
+
+            licenses {
+                license {
+                    name licenseName
+                    url licenseUrl
+                }
+            }
+
+            developers {
+                developer {
+                    id devId
+                    name devName
+                    email devEmail
+                }
+            }
+        }
+    }
+}
