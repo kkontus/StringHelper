@@ -58,7 +58,8 @@ ext {
     devEmail = "kristijan.kontus@gmail.com"
 }
 
-apply from: 'central.gradle'
+//apply from: 'central.gradle'
+apply from: 'https://raw.githubusercontent.com/kkontus/mavencentral/master/central.gradle'
 
 
 /*
